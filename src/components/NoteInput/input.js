@@ -13,15 +13,15 @@ function Input ({oldNote, close, addNote, deleteNote}) {
         if(oldNote && oldNote.body!=="") {
             setBody(oldNote.body);
         }
-    }, [])
+    }, []);
 
     const formatDate = () => {
         if(oldNote) {
-            let date = oldNote.editedAt.getDate();
-            let month = oldNote.editedAt.getMonth() + 1;
-            let year = oldNote.editedAt.getFullYear();
-            let hour = oldNote.editedAt.getHours();
-            let minutes = oldNote.editedAt.getMinutes();
+            let date = oldNote.editedAt.day;
+            let month = oldNote.editedAt.month;
+            let year = oldNote.editedAt.year;
+            let hour = oldNote.editedAt.hour > 9 ? oldNote.editedAt.hour : '0' + oldNote.editedAt.hour;
+            let minutes = oldNote.editedAt.minutes > 9 ? oldNote.editedAt.minutes : '0' + oldNote.editedAt.minutes;
             let finalDate = date + "/" + month + "/" + year + " at " + hour + ":" + minutes;
             return finalDate;
         }
@@ -32,13 +32,20 @@ function Input ({oldNote, close, addNote, deleteNote}) {
             alert("Enter content in the note to save");
             return;
         }
+        let date = new Date();
         const temp = {
             title: title,
             body: body,
-            editedAt: new Date(),
+            editedAt: {
+                day: date.getDate(),
+                month: date.getMonth() + 1,
+                year: date.getFullYear(),
+                hour: date.getHours(),
+                minutes: date.getMinutes()
+            },
             id: oldNote ? oldNote.id : uuid()
         }
-        addNote(temp, false);
+        addNote(temp);
         close();
     }
 

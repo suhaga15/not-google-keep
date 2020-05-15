@@ -7,6 +7,14 @@
     width: 100%;
 }
 
+.search-bar {
+    font-size: 16px;
+    margin: 5px;
+    padding: 5px;
+    border: 2px solid #D3D3D3;
+    width: 60vw;
+}
+
 .cards {
     display: flex;
     width: 90vw;
