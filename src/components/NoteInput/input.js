@@ -5,6 +5,7 @@ import './input.css';
 function Input ({oldNote, close, addNote, deleteNote}) {
     const [title, setTitle] = useState("");
     const [body, setBody] = useState("");
+    const [isPinned, toggleIsPinned] = useState(false);
 
     useEffect(()=>{
         if(oldNote && oldNote.title!=="") {
@@ -12,6 +13,9 @@ function Input ({oldNote, close, addNote, deleteNote}) {
         }
         if(oldNote && oldNote.body!=="") {
             setBody(oldNote.body);
+        }
+        if(oldNote && oldNote.pinned) {
+            toggleIsPinned(true);
         }
     }, []);
 
@@ -43,6 +47,7 @@ function Input ({oldNote, close, addNote, deleteNote}) {
                 hour: date.getHours(),
                 minutes: date.getMinutes()
             },
+            pinned: isPinned,
             id: oldNote ? oldNote.id : uuid()
         }
         addNote(temp);
@@ -65,6 +70,17 @@ function Input ({oldNote, close, addNote, deleteNote}) {
         }
     }
 
+    const togglePinned = (val) => {
+        toggleIsPinned(!val);
+        if(oldNote) {
+            let temp = {
+                ...oldNote,
+                pinned: !val
+            }
+            addNote(temp);
+        }
+    }
+
     return (
         <div>
             <div className="modal-content">
@@ -72,7 +88,9 @@ function Input ({oldNote, close, addNote, deleteNote}) {
                     <input className="title-input" type="text" value={title} placeholder="Add title" onChange={(e) => {changeTitle(e)}} />
                     <div style={{float:"right"}}>
                         <button className="modal-function" onClick={()=>{deleteNote(oldNote.id);close();}}>Delete</button>
-                        <button className="modal-function">Pin</button>
+                        <button className="modal-function" onClick={()=>{togglePinned(isPinned)}}>
+                            {isPinned ? <>Unpin</> : <>Pin</>}
+                        </button>
                     </div>
                 </div>
                 <textarea className="note-input" type="text" value={body} placeholder="Take a note..."  onChange={(e) => {changeBody(e)}} />

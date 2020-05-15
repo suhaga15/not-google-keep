@@ -4,16 +4,6 @@ import Popup from 'reactjs-popup';
 import './App.css';
 import Input from './components/NoteInput/input';
 
-/* Structure of each note
-  {
-    title,
-    body,
-    editedAt,
-    pinned,
-    id
-  }
-*/
-
 function App() {
   const [notes, addNote] = useState([]);
   const [filteredItems, setFilteredIttems] = useState([]);
@@ -33,7 +23,7 @@ function App() {
     setFilteredIttems(notes);
   }, [notes]);
 
-  // To aid with displaying search results
+  // To display only the notes being searched for
   useEffect(() => {
     if(searchText==="") {
       setFilteredIttems(notes);
@@ -69,6 +59,32 @@ function App() {
     }
   }
 
+  const showPinnedNotes = () => {
+    let temp = filteredItems.filter((note) => {
+      return note.pinned
+    });
+    if(temp.length > 0) {
+      let pinnedNotes = temp.map((note) => {
+        return( 
+          <Card 
+            key={note.id}
+            note={note}
+            addNote={addNewNote}
+            deleteNote={deleteNote} />)
+      })
+      return (
+        <>
+          <h4 style={{width:'90vw'}}>Pinned</h4>
+          <div className="cards">
+            {pinnedNotes}
+          </div>
+          <div className="separator"></div>
+        </>
+      )
+    }
+    return false;
+  }
+
   return (
     <div className="App">
       <h1 className="main-title">
@@ -88,21 +104,17 @@ function App() {
       </Popup>
       <br />
       {
-        // pinned.length!==0 &&
-        // <>
-        //   <h4 style={{width:'90vw'}}>Pinned</h4>
-        //   <div className="cards">
-        //     <Card pinned/>
-        //   </div>
-        //   <div className="separator"></div>
-        // </>
+        showPinnedNotes() && 
+        <>
+          {showPinnedNotes()}
+        </> 
       }
       {
         filteredItems.length!==0 ?
         <div className="cards">
           {
             filteredItems.map((note) => {
-              return(
+              return(!note.pinned &&
               <Card 
                 key={note.id}
                 note={note}
