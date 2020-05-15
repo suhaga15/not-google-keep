@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import Card from './components/Card/card';
 import Popup from 'reactjs-popup';
 import './App.css';
@@ -13,8 +13,31 @@ import Input from './components/NoteInput/input';
 */
 
 function App() {
-  const [notes, addNote] = [];
-  const [pinned, addPinned] = [];
+  const [notes, addNote] = useState([]);
+  const [pinned, addPinned] = useState([]);
+
+  const addNewNote = (newNote, pinned) => {
+    let newNoteFlag = notes.filter((note) => {
+      if(note.id === newNote.id) {
+        return note;
+      }
+    });
+    console.log(newNoteFlag);
+    const temp = [...notes, newNote];
+    if(!pinned) {
+      addNote(temp);
+    } else {
+      addPinned(temp);
+    }
+  }
+
+  const deleteNote = (id) => {
+    let newArray = notes.filter((note) => {
+      return note.id!==id;
+    });
+    addNote(newArray);
+  }
+  console.log(notes);
   return (
     <div className="App">
       <h1 className="main-title">
@@ -27,25 +50,37 @@ function App() {
         </div>
       } modal>
         {
-          close=><Input close={close} />
+          close=><Input close={close} addNote={addNewNote} />
         }
       </Popup>
         <br />
       {
-        // pinned && 
-        // <>
-        //   <h4 style={{width:'90vw'}}>Pinned</h4>
-        //   <div className="cards">
-        //     <Cards pinned/>
-        //   </div>
-        //   <div className="separator"></div>
-        // </>
+        pinned.length!==0 &&
+        <>
+          <h4 style={{width:'90vw'}}>Pinned</h4>
+          <div className="cards">
+            <Card pinned/>
+          </div>
+          <div className="separator"></div>
+        </>
       }
 
       {
-        notes ?
+        notes.length!==0 ?
         <div className="cards">
-          <Card />
+          {/* <Card /> */}
+          {
+            notes.map((note) => {
+              return(
+              <Card 
+                key={note.id}
+                // title={note.title}
+                // body={note.body}
+                note={note}
+                addNote={addNewNote}
+                deleteNote={deleteNote} />)
+            })
+          }
         </div>
         :
         <div>Create a new note</div>
