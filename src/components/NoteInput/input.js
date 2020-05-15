@@ -15,6 +15,18 @@ function Input ({oldNote, close, addNote, deleteNote}) {
         }
     }, [])
 
+    const formatDate = () => {
+        if(oldNote) {
+            let date = oldNote.editedAt.getDate();
+            let month = oldNote.editedAt.getMonth() + 1;
+            let year = oldNote.editedAt.getFullYear();
+            let hour = oldNote.editedAt.getHours();
+            let minutes = oldNote.editedAt.getMinutes();
+            let finalDate = date + "/" + month + "/" + year + " at " + hour + ":" + minutes;
+            return finalDate;
+        }
+    }
+
     const handleSave = () => {
         if(title==="" && body==="") {
             alert("Enter content in the note to save");
@@ -24,9 +36,8 @@ function Input ({oldNote, close, addNote, deleteNote}) {
             title: title,
             body: body,
             editedAt: new Date(),
-            id: uuid()
+            id: oldNote ? oldNote.id : uuid()
         }
-        console.log(temp);
         addNote(temp, false);
         close();
     }
@@ -60,14 +71,16 @@ function Input ({oldNote, close, addNote, deleteNote}) {
                 <textarea className="note-input" type="text" value={body} placeholder="Take a note..."  onChange={(e) => {changeBody(e)}} />
                 <div className="modal-footer">
                     {
-                        // editedAt ?
-                        // <>Last edited at {editedAt}</>
-                        // :
-                        // <>Last edited at now</>
+                        oldNote!==undefined ?
+                        <>Last edited on {formatDate()}</>
+                        :
+                        <>Last edited now</>
                     }
-                    edited now
-                    <button className="modal-function" style={{float:"right"}} onClick={close}>Cancel</button>
-                    <button className="modal-function" style={{float:"right"}} onClick={handleSave}>Save</button>
+                    <div style={{float:"right"}}>
+                        <button className="modal-function" onClick={handleSave}>Save</button>
+                        <button className="modal-function" onClick={close}>Cancel</button>
+                    </div>
+                    
                 </div>
             </div>
         </div>

@@ -8,7 +8,8 @@ import Input from './components/NoteInput/input';
   {
     title,
     body,
-    editedAt
+    editedAt,
+    id
   }
 */
 
@@ -17,13 +18,10 @@ function App() {
   const [pinned, addPinned] = useState([]);
 
   const addNewNote = (newNote, pinned) => {
-    let newNoteFlag = notes.filter((note) => {
-      if(note.id === newNote.id) {
-        return note;
-      }
+    let newNotesArray = notes.filter((note) => {
+      return note.id!==newNote.id
     });
-    console.log(newNoteFlag);
-    const temp = [...notes, newNote];
+    const temp = [...newNotesArray, newNote];
     if(!pinned) {
       addNote(temp);
     } else {
@@ -37,13 +35,12 @@ function App() {
     });
     addNote(newArray);
   }
-  console.log(notes);
+
   return (
     <div className="App">
       <h1 className="main-title">
         Not Keep
       </h1>
-
       <Popup trigger={
         <div className="new-note">
           Take a note...
@@ -53,7 +50,7 @@ function App() {
           close=><Input close={close} addNote={addNewNote} />
         }
       </Popup>
-        <br />
+      <br />
       {
         pinned.length!==0 &&
         <>
@@ -64,18 +61,14 @@ function App() {
           <div className="separator"></div>
         </>
       }
-
       {
         notes.length!==0 ?
         <div className="cards">
-          {/* <Card /> */}
           {
             notes.map((note) => {
               return(
               <Card 
                 key={note.id}
-                // title={note.title}
-                // body={note.body}
                 note={note}
                 addNote={addNewNote}
                 deleteNote={deleteNote} />)
