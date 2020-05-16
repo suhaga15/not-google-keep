@@ -88,7 +88,7 @@ function App() {
   return (
     <div className="App">
       <h1 className="main-title">
-        Not Keep
+        NOT KEEP
       </h1>
       <input className="search-bar" type="text" placeholder="Search your notes" onChange={(e)=>{changeSearchText(e)}} />
       <br />
